@@ -1,0 +1,100 @@
+name: ai-workforce
+
+services:
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-paperclip}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-paperclip}
+      POSTGRES_DB: ${POSTGRES_DB:-paperclip}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - ai-workforce
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paperclip} -d ${POSTGRES_DB:-paperclip}"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  paperclip:
+    build:
+      context: ./services/paperclip
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://paperclip:paperclip@db:5432/paperclip}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      PAPERCLIP_PUBLIC_URL: ${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - paperclip_home:/paperclip
+    networks:
+      - ai-workforce
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    ports:
+      - "${PAPERCLIP_PORT:-3100}:3100"
+
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - openclaw_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ai-workforce
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:18789/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    ports:
+      - "${OPENCLAW_PORT:-18789}:18789"
+
+  hermes:
+    image: nousresearch/hermes-agent
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    env_file: .env
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - hermes_data:/opt/data
+    networks:
+      - ai-workforce
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8642/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    ports:
+      - "${HERMES_PORT:-8642}:8642"
+
+volumes:
+  pgdata:
+  paperclip_home:
+  openclaw_data:
+  hermes_data:
+
+networks:
+  ai-workforce:
+    driver: bridge

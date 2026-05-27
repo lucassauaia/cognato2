@@ -1,0 +1,23 @@
+# Secrets
+.env
+*.local
+
+# Node
+node_modules/
+.pnpm-store/
+
+# Build artifacts
+dist/
+build/
+.next/
+.turbo/
+
+# Paperclip source (cloned separately, not tracked)
+services/paperclip/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
