@@ -24,7 +24,6 @@ services:
   paperclip:
     image: ghcr.io/lucassauaia/cognato2/paperclip:latest
     restart: unless-stopped
-    env_file: .env
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://paperclip:paperclip@db:5432/paperclip}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
@@ -34,7 +33,7 @@ services:
         condition: service_healthy
     volumes:
       - paperclip_home:/paperclip
-      - ./services/plugins:/paperclip/.paperclip/plugins
+      - plugins_data:/paperclip/.paperclip/plugins
     networks:
       - ai-workforce
     healthcheck:
@@ -51,7 +50,6 @@ services:
     image: ghcr.io/openclaw/openclaw:latest
     restart: unless-stopped
     command: ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
-    env_file: .env
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
@@ -74,7 +72,6 @@ services:
     image: nousresearch/hermes-agent
     restart: unless-stopped
     command: ["gateway", "run"]
-    env_file: .env
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
@@ -94,12 +91,15 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    command: >
+      caddy reverse-proxy
+      --from ${CADDY_DOMAIN:-localhost}
+      --to paperclip:3100
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
     networks:
@@ -113,6 +113,7 @@ services:
 volumes:
   pgdata:
   paperclip_home:
+  plugins_data:
   openclaw_data:
   hermes_data:
   caddy_data:
