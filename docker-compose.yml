@@ -1,7 +1,4 @@
-# name: cognato
-
 services:
-
   db:
     image: postgres:17-alpine
     restart: unless-stopped
@@ -18,8 +15,6 @@ services:
       interval: 2s
       timeout: 5s
       retries: 30
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
 
   paperclip:
     image: ghcr.io/lucassauaia/cognato/paperclip:latest
@@ -44,7 +39,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-    # Local dev: expose directly. Production: remove this and use Caddy.
     ports:
       - "${PAPERCLIP_PORT:-3100}:3100"
 
