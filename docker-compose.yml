@@ -1,4 +1,4 @@
-name: cognato
+# name: cognato
 
 services:
 
@@ -12,7 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - ai-workforce
+      - cognato
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paperclip} -d ${POSTGRES_DB:-paperclip}"]
       interval: 2s
@@ -37,7 +37,7 @@ services:
       - paperclip_home:/paperclip
       - plugins_data:/paperclip/.paperclip/plugins
     networks:
-      - ai-workforce
+      - cognato
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3100/api/health || exit 1"]
       interval: 10s
@@ -60,7 +60,7 @@ services:
       - openclaw_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - ai-workforce
+      - cognato
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:18789/healthz || exit 1"]
       interval: 10s
@@ -80,7 +80,7 @@ services:
     volumes:
       - hermes_data:/opt/data
     networks:
-      - ai-workforce
+      - cognato
     healthcheck:
       test: ["CMD-SHELL", "pgrep -f 'hermes gateway' || exit 1"]
       interval: 10s
@@ -105,7 +105,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - ai-workforce
+      - cognato
     depends_on:
       paperclip:
         condition: service_healthy
@@ -122,5 +122,5 @@ volumes:
   caddy_config:
 
 networks:
-  ai-workforce:
+  cognato:
     driver: bridge
