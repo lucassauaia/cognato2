@@ -38,8 +38,8 @@ ai-workforce network (bridge)
 
 ```bash
 # 1. Clone repo
-git clone https://github.com/lucassauaia/cognato2.git
-cd cognato2
+git clone https://github.com/lucassauaia/cognato.git
+cd cognato
 
 # 2. Clone Paperclip source
 git clone https://github.com/paperclipai/paperclip.git services/paperclip

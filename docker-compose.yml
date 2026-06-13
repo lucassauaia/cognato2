@@ -22,7 +22,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
 
   paperclip:
-    image: ghcr.io/lucassauaia/cognato2/paperclip:latest
+    image: ghcr.io/lucassauaia/cognato/paperclip:latest
     restart: unless-stopped
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://paperclip:paperclip@db:5432/paperclip}

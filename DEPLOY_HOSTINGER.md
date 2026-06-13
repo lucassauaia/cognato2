@@ -24,14 +24,14 @@ gh auth token | docker login ghcr.io -u lucassauaia --password-stdin
 ### 1.3 Tag and push the image
 
 ```bash
-docker tag ai-workforce-paperclip:latest ghcr.io/lucassauaia/cognato2/paperclip:latest
-docker push ghcr.io/lucassauaia/cognato2/paperclip:latest
+docker tag ai-workforce-paperclip:latest ghcr.io/lucassauaia/cognato/paperclip:latest
+docker push ghcr.io/lucassauaia/cognato/paperclip:latest
 ```
 
 ### 1.4 Make the package public
 
 1. Go to https://github.com/lucassauaia?tab=packages
-2. Click **cognato2/paperclip**
+2. Click **cognato/paperclip**
 3. Package Settings → Change visibility → **Public**
 
 > Public = VPS pulls without credentials.
@@ -47,7 +47,7 @@ In [docker-compose.yml](docker-compose.yml), replace the `paperclip` build block
       dockerfile: Dockerfile
 
 # Replace with:
-    image: ghcr.io/lucassauaia/cognato2/paperclip:latest
+    image: ghcr.io/lucassauaia/cognato/paperclip:latest
 ```
 
 Commit and push:
@@ -71,8 +71,8 @@ Direct URL: `https://hpanel.hostinger.com/vps/1687333/docker-manager/compose-url
 
 | Field | Value |
 |---|---|
-| **URL** | `https://github.com/lucassauaia/cognato2/blob/master/docker-compose.yml` |
-| **Nome do projeto** | `cognato2` |
+| **URL** | `https://github.com/lucassauaia/cognato/blob/master/docker-compose.yml` |
+| **Nome do projeto** | `cognato` |
 
 Click **Implantar**.
 
@@ -104,7 +104,7 @@ Docker Manager pulls all images and starts the containers.
 
 ```bash
 ssh root@2.24.112.86
-docker compose -p cognato2 ps
+docker compose -p cognato ps
 curl -s http://localhost:3100/api/health
 ```
 
@@ -113,7 +113,7 @@ Expected: `{"status":"ok",...}`
 ### 2.6 Bootstrap first admin
 
 ```bash
-docker exec cognato2-paperclip-1 node /app/cli/dist/index.js auth bootstrap-ceo
+docker exec cognato-paperclip-1 node /app/cli/dist/index.js auth bootstrap-ceo
 ```
 
 Copy the invite URL from output and open in browser.

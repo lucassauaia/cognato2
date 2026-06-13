@@ -15,7 +15,7 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout cognato2
+      - name: Checkout cognato
         uses: actions/checkout@v4
 
       - name: Checkout paperclip source
@@ -24,7 +24,7 @@ jobs:
           repository: paperclipai/paperclip
           path: services/paperclip
 
-      - name: Apply cognato2 patches (The Office feature + python3-setuptools fix)
+      - name: Apply cognato patches (The Office feature + python3-setuptools fix)
         run: |
           git -C services/paperclip apply "$GITHUB_WORKSPACE/patches/the-office-feature.patch"
 
@@ -41,4 +41,4 @@ jobs:
           context: services/paperclip
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/lucassauaia/cognato2/paperclip:latest
+          tags: ghcr.io/lucassauaia/cognato/paperclip:latest

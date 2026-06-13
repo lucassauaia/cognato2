@@ -47,7 +47,7 @@ All three share a single `ai-workforce` bridge network for internal DNS-based se
 
 ### Component 1: Project Scaffold
 
-#### [NEW] [CLAUDE.md](file:///Users/promo.warriors/Documents/cognato2/CLAUDE.md)
+#### [NEW] [CLAUDE.md](file:///Users/promo.warriors/Documents/cognato/CLAUDE.md)
 Already created — the master configuration and orchestration rules for this project.
 
 #### [NEW] `.gitignore`
@@ -165,7 +165,7 @@ Only if no official image exists. Would install Hermes Agent and configure the d
 
 ### Component 6: Task & Lesson Tracking
 
-#### [NEW] [tasks/lesson.md](file:///Users/promo.warriors/Documents/cognato2/tasks/lesson.md)
+#### [NEW] [tasks/lesson.md](file:///Users/promo.warriors/Documents/cognato/tasks/lesson.md)
 Checkable task list per CLAUDE.md workflow orchestration rules. Created alongside this plan.
 
 ---
